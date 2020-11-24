@@ -1,0 +1,20 @@
+# Systemd unit file for tomcat
+[Unit]
+Description=Huxley API
+After=rabbit.service network.target
+
+[Service]
+Type=simple
+
+Environment=JAVA_HOME=/home/huxley/tools/jdk
+WorkingDirectory=/home/huxley/evaluator/test/current
+
+ExecStart=/home/huxley/tools/jdk/bin/java -jar /home/huxley/evaluator/test/current/evaluator.jar
+
+User=huxley
+Group=huxley
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

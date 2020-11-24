@@ -1,0 +1,21 @@
+# Systemd unit file for tomcat
+[Unit]
+Description=Huxley API
+After=rabbit.service network.target
+
+[Service]
+Type=simple
+
+Environment=JAVA_HOME=/home/huxley/tools/jdk
+Environment=GRAILS_OPTS="-XX:MaxPermSize=1024m -Xmx3324M -server"
+WorkingDirectory=/home/huxley/api/current
+
+ExecStart=/home/huxley/tools/jdk/bin/java -Duser.timezone=America/Maceio -Dgrails.env=test -jar /home/huxley/api/current/huxley-api.jar
+
+User=huxley
+Group=huxley
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

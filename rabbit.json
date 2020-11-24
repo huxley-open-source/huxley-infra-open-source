@@ -1,0 +1,26 @@
+{
+  "rabbit_version":"3.5.7",
+  "users":[
+    {"name":"guest","password_hash":"55VdDhCJh6Ebe4ilKR54C+efoX0=","tags":"administrator"},
+    {"name":"test","password_hash":"RBDDGWg+C6Y5TE02L7Minq3AUvg=","tags":"administrator"}
+  ],
+  "vhosts":[{"name":"/"}
+  ],
+  "permissions":[
+    {"user":"guest","vhost":"/","configure":".*","write":".*","read":".*"},
+    {"user":"test","vhost":"/","configure":".*","write":".*","read":".*"}
+  ],
+  "parameters":[],
+  "policies":[],
+  "queues":[
+    {"name":"code_queue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"evaluation_queue","vhost":"/","durable":true,"auto_delete":false,"arguments":{"x-max-priority":10}},
+    {"name":"submission_queue","vhost":"/","durable":true,"auto_delete":false,"arguments":{"x-max-priority":10}},
+    {"name":"code_result_queue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"reevaluation_queue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"oracle_queue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"oracle_result_queue","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
+  ],
+  "exchanges":[],
+  "bindings":[]
+}

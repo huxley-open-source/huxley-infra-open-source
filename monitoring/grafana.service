@@ -1,0 +1,22 @@
+[Unit]
+Description=Grafana instance
+Documentation=http://docs.grafana.org
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+EnvironmentFile=/home/monitoring/tools/grafana/grafana-server.env
+User=monitoring
+Group=monitoring
+Type=simple
+Restart=on-failure
+WorkingDirectory=/home/monitoring/tools/grafana
+ExecStart=/home/monitoring/tools/grafana/bin/grafana-server                                \
+                            --config=/home/monitoring/tools/grafana/conf/grafana.ini        \
+                            --pidfile=${PID_FILE}                 \
+
+LimitNOFILE=10000
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
