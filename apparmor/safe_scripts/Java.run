@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# parameters are:
+# $1 source_file
+# $2 input_file
+# $3 timelimit (in seconds)
+#
+# the output of the submission should be directed to the standard output
+#
+# Please, see Readme.md to a complete list of return codes
+#
+
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+
+IFS=$'\n'
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. $DIR/config.properties
+
+java=`which java`
+[ -x "$java" ] || java=/usr/java/bin/java
+
+javac=`which javac`
+[ -x "javac" ] || javac=/usr/bin/javac
+
+
+if [ "$1" == "" -o "$2" == "" -o "$3" == "" ]; then
+    echo "Java.run: missing parameter"
+    exit 101
+fi
+if [ ! -r $1 ]; then
+    echo "Java.run: $1 not found or it's not readable"    
+    exit 102
+fi
+
+if [ ! -x $jail ]; then
+    echo "Java.run: $jail not found or it's not executable"
+    exit 103
+fi
+if [ ! -x $javac ]; then
+    echo "Java.run: $javac not found or it's not executable"
+    exit 106
+fi
+if [ ! -x $java ]; then
+    echo "Java.run: $java not found or it's not executable"
+    exit 107
+fi
+
+
+name=$1
+input=$2
+time=$3
+
+cd $(dirname $name)/
+sed -i '/package/d' $(basename $name)
+$javac $(basename $name)
+ret=$?
+if [ "$ret" != "0" ]; then
+	echo "Java.run: Compilation Error: $ret"
+	exit 105
+else
+	#echo "$jail -t$time -i$input -- $java  -Xmx512M -Xms512M $(basename $name .java)"
+	$jail -t$time -i$input -- $java -cp . $(basename $name .java)
+	ret=$?
+	
+fi
+exit $ret

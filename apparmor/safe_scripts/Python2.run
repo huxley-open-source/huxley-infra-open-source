@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# parameters are:
+# $1 source_file
+# $2 input_file
+# $3 timelimit (in seconds)
+#
+# the output of the submission should be directed to the standard output
+#
+# Please, see Readme.md to a complete list of return codes
+#
+IFS=$'\n'
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. $DIR/config.properties
+
+python=`which python2`
+[ -x "$python" ] || python=/usr/bin/python2
+
+if [ "$1" == "" -o "$2" == "" -o "$3" == "" ]; then
+    echo "Python.run: missing parameter"
+    exit 101
+fi
+if [ ! -r $1 ]; then
+    echo "Python.run: $1 not found or it's not readable"    
+    exit 102
+fi
+
+if [ ! -x $jail ]; then
+    echo "Python.run: $jail not found or it's not executable"
+    exit 103
+fi
+if [ ! -x $python ]; then
+    echo "Python.run: $python not found or it's not executable"
+    exit 108
+fi
+
+name=$1
+input=$2
+time=$3
+
+$jail -t$time -i$input $python $name
+ret=$?
+
+exit $ret

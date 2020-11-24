@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# parameters are:
+# $1 source_file
+# $2 input_file
+# $3 timelimit (in seconds)
+#
+# the output of the submission should be directed to the standard output
+#
+# Please, see Readme.md to a complete list of return codes
+#
+IFS=$'\n'
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. $DIR/config.properties
+
+octave=`which octave`
+[ -x "$octave" ] || octave=/usr/bin/octave
+
+if [ "$1" == "" -o "$2" == "" -o "$3" == "" ]; then
+    echo "Octave.run: missing parameter"
+    exit 101
+fi
+if [ ! -r $1 ]; then
+    echo "Octave.run: $1 not found or it's not readable"    
+    exit 102
+fi
+
+if [ ! -x $jail ]; then
+    echo "Octave.run: $jail not found or it's not executable"
+    exit 103
+fi
+if [ ! -x $octave ]; then
+    echo "Octave.run: $octave not found or it's not executable"
+    exit 109
+fi
+
+name=$1
+source_dir=$(dirname ${name})
+input=$2
+time=$3
+
+#create a temporary script in order to run the octave from the shell
+temp='octave_'$(md5sum $name | cut -d" " -f1)
+
+cat $name > $source_dir/$temp'.m'
+scriptName='run_'$temp'.sh'
+
+echo "#!/bin/bash
+$octave -qfH $source_dir/$temp.m
+exit \$?
+" > $source_dir/$scriptName
+chmod +x $source_dir/$scriptName
+
+# run the script
+$jail -t$time -i$input $source_dir/$scriptName
+ret=$?
+
+
+## Uma limpeza
+rm $source_dir/$temp'.m'
+rm $source_dir/$scriptName
+
+exit $ret

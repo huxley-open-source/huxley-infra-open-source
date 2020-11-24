@@ -1,0 +1,47 @@
+#include <tunables/global>
+/home/huxley/data/scripts/huxley_jail {
+    #include <abstractions/base>
+
+    /home/huxley/data/scripts/huxley_jail mixr,
+
+	/home/huxley/data/temp/** ixmr,
+	# 100 segundos caso o huxley_jail falhe
+	set rlimit cpu <= 100,
+	
+	# no máximo 30 megas para cada execucao
+
+	
+	# Não consegui setar esse valor porque a JVM
+	# dá pau se vc colocar qualquer valor.
+	# set rlimit as <= 512M,
+
+	set rlimit nproc <= 524,
+
+
+
+    /dev/tty mrw,
+
+    # OCTAVE
+    /usr/bin/octave* ixr,
+    /usr/share/octave/** r,
+    /usr/lib/@{multiarch}/octave/** mr,
+
+
+    # PYTHON
+    /usr/bin/python* ixr,
+    /usr/local/lib/python*/dist-packages/ r,
+    /etc/python*/sitecustomize.py r,
+
+    # JAVA
+    /usr/lib/jvm/java*/jre/bin/java mixr,
+    /home/huxley/tools/java/jdk*/** mixr,
+    /etc/java-*/** r,
+    /sys/devices/system/cpu/ r,
+    /proc/*/coredump_filter rw,
+    /etc/nsswitch.conf r,
+    / r,
+    /tmp/** wr,
+    /usr/share/java/** r,
+
+
+}

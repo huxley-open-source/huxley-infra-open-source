@@ -1,0 +1,8 @@
+#!/bin/bash
+
+IFS=$'\n'
+
+archive1=$1
+archive2=$2
+diff -b $archive1 $archive2
+exit $ret
